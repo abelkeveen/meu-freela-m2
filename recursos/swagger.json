@@ -381,6 +381,48 @@
           "401": { "description": "Token inválido ou não fornecido." }
         }
       }
+    },
+    "/payments/{id}/status": {
+      "put": {
+        "tags": ["Pagamentos"],
+        "summary": "Atualiza o status do pagamento (Recebido/Pendente)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recebido": { "type": "boolean" }
+                },
+                "required": ["recebido"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pagamento atualizado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Payment" }
+              }
+            }
+          },
+          "400": { "description": "Campo 'recebido' deve ser booleano." },
+          "404": { "description": "Pagamento não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
     }
   },
   "components": {
@@ -411,7 +453,11 @@
           "jobId": { "type": "integer" },
           "valor": { "type": "number" },
           "recebido": { "type": "boolean" },
-          "data": { "type": "string", "format": "date-time" }
+          "data": { "type": "string", "format": "date-time" },
+          "clienteNome": {
+            "type": "string",
+            "description": "Nome do cliente relacionado ao pagamento"
+          }
         }
       }
     },

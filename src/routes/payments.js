@@ -9,4 +9,7 @@ router.get("/", PaymentsController.list);
 router.post("/", PaymentsController.create);
 router.get("/summary", PaymentsController.summary);
 
+// Atualiza status do pagamento
+router.put("/:id/status", PaymentsController.updateStatus);
+
 module.exports = router;
