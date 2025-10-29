@@ -1,0 +1,426 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Meu Freela API",
+    "version": "1.0.0",
+    "description": "API para gerenciamento de freelas, clientes e pagamentos."
+  },
+  "tags": [
+    { "name": "Autenticação", "description": "Cadastro e login de usuários" },
+    { "name": "Clientes", "description": "Operações relacionadas a clientes" },
+    { "name": "Jobs", "description": "Operações relacionadas a trabalhos" },
+    {
+      "name": "Pagamentos",
+      "description": "Operações relacionadas a pagamentos"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Cria um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": { "type": "string" },
+                  "senha": { "type": "string" }
+                },
+                "required": ["login", "senha"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário criado." },
+          "400": { "description": "Login e senha obrigatórios." },
+          "409": { "description": "Usuário já existe." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Autentica usuário e retorna token JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": { "type": "string" },
+                  "senha": { "type": "string" }
+                },
+                "required": ["login", "senha"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token JWT gerado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Credenciais inválidas." }
+        }
+      }
+    },
+    "/clients": {
+      "get": {
+        "tags": ["Clientes"],
+        "summary": "Lista todos os clientes",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de clientes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Client" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "post": {
+        "tags": ["Clientes"],
+        "summary": "Cadastra um novo cliente",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Client" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente cadastrado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Client" }
+              }
+            }
+          },
+          "400": { "description": "Nome obrigatório." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "tags": ["Clientes"],
+        "summary": "Retorna dados de um cliente específico",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do cliente.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Client" }
+              }
+            }
+          },
+          "404": { "description": "Cliente não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "put": {
+        "tags": ["Clientes"],
+        "summary": "Atualiza informações do cliente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Client" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cliente atualizado." },
+          "404": { "description": "Cliente não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "delete": {
+        "tags": ["Clientes"],
+        "summary": "Remove um cliente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Cliente removido." },
+          "404": { "description": "Cliente não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Lista todos os jobs",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de jobs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Job" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "post": {
+        "tags": ["Jobs"],
+        "summary": "Cria um novo job",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Job" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Job criado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Job" }
+              }
+            }
+          },
+          "400": { "description": "Campos obrigatórios." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
+    },
+    "/jobs/{id}": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Retorna detalhes de um job",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do job.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Job" }
+              }
+            }
+          },
+          "404": { "description": "Job não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "put": {
+        "tags": ["Jobs"],
+        "summary": "Atualiza job",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Job" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Job atualizado." },
+          "404": { "description": "Job não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "delete": {
+        "tags": ["Jobs"],
+        "summary": "Remove job",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Job removido." },
+          "404": { "description": "Job não encontrado." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "tags": ["Pagamentos"],
+        "summary": "Lista todos os pagamentos",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de pagamentos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Payment" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      },
+      "post": {
+        "tags": ["Pagamentos"],
+        "summary": "Registra um pagamento",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Payment" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pagamento registrado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Payment" }
+              }
+            }
+          },
+          "400": { "description": "Campos obrigatórios." },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
+    },
+    "/payments/summary": {
+      "get": {
+        "tags": ["Pagamentos"],
+        "summary": "Retorna resumo financeiro",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Resumo financeiro.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalRecebido": { "type": "number" },
+                    "totalPendente": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Token inválido ou não fornecido." }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "nome": { "type": "string" },
+          "contato": { "type": "string" }
+        }
+      },
+      "Job": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "clienteId": { "type": "integer" },
+          "descricao": { "type": "string" },
+          "valor": { "type": "number" },
+          "status": { "type": "string" },
+          "data": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "jobId": { "type": "integer" },
+          "valor": { "type": "number" },
+          "recebido": { "type": "boolean" },
+          "data": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
