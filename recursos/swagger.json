@@ -74,7 +74,27 @@
               }
             }
           },
-          "401": { "description": "Credenciais inválidas." }
+          "400": {
+            "description": "Campos obrigatórios não informados.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Login e senha obrigatórios."
+                }
+              }
+            }
+          },
+          "401": { "description": "Credenciais inválidas." },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Usuário não encontrado."
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -120,7 +140,17 @@
             }
           },
           "400": { "description": "Nome obrigatório." },
-          "401": { "description": "Token inválido ou não fornecido." }
+          "401": { "description": "Token inválido ou não fornecido." },
+          "409": {
+            "description": "Nome de cliente já existente.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Nome de cliente já existente."
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -172,6 +202,16 @@
         },
         "responses": {
           "200": { "description": "Cliente atualizado." },
+          "400": {
+            "description": "O identificador do cliente não pode ser alterado.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "O identificador do cliente não pode ser alterado."
+                }
+              }
+            }
+          },
           "404": { "description": "Cliente não encontrado." },
           "401": { "description": "Token inválido ou não fornecido." }
         }
@@ -191,7 +231,17 @@
         "responses": {
           "204": { "description": "Cliente removido." },
           "404": { "description": "Cliente não encontrado." },
-          "401": { "description": "Token inválido ou não fornecido." }
+          "401": { "description": "Token inválido ou não fornecido." },
+          "409": {
+            "description": "Não é permitido remover cliente com jobs vinculados.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Não é permitido remover cliente com jobs vinculados."
+                }
+              }
+            }
+          }
         }
       }
     },

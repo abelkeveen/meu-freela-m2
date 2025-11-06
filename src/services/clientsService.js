@@ -26,6 +26,16 @@ module.exports = {
     const idx = clients.findIndex((c) => c.id == req.params.id);
     if (idx === -1)
       return res.status(404).json({ error: "Cliente não encontrado." });
+    // Verifica se há jobs vinculados ao cliente
+    const { jobs } = require("../models/db");
+    const hasJobs = jobs.some((j) => j.clienteId == req.params.id);
+    if (hasJobs) {
+      return res
+        .status(409)
+        .json({
+          error: "Não é permitido remover cliente com jobs vinculados.",
+        });
+    }
     clients.splice(idx, 1);
     res.status(204).end();
   },

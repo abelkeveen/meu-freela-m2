@@ -20,8 +20,11 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
+    "chai": "^6.2.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mocha": "^11.7.4",
+    "supertest": "^7.1.4",
     "swagger-ui-express": "^5.0.1"
   }
 }

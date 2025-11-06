@@ -12,10 +12,13 @@ module.exports = {
       return res.status(409).json({ error: "Usuário já existe." });
     const hash = bcrypt.hashSync(senha, 8);
     users.push({ id: users.length + 1, login, senha: hash });
-    res.status(201).json({ message: "Usuário criado." });
+    res.status(201).json({ login });
   },
   login: (req, res) => {
     const { login, senha } = req.body;
+    if (!login || !senha) {
+      return res.status(400).json({ error: "Login e senha obrigatórios." });
+    }
     const user = users.find((u) => u.login === login);
     if (!user)
       return res.status(404).json({ error: "Usuário não encontrado." });
