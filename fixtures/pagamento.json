@@ -1,0 +1,17 @@
+{
+  "valido": {
+    "valor": 100,
+    "recebido": false,
+    "data": "2025-11-07"
+  },
+  "recebido": {
+    "valor": 200,
+    "recebido": true,
+    "data": "2025-11-07"
+  },
+  "pendente": {
+    "valor": 300,
+    "recebido": false,
+    "data": "2025-11-07"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "valido": {
+    "login": "julio.lima",
+    "senha": "123456"
+  },
+  "invalido": {
+    "login": "julio.lima",
+    "senha": "123455"
+  },
+  "inexistente": {
+    "login": "julio.lina",
+    "senha": "123456"
+  },
+  "semUsuario": {
+    "senha": "123456"
+  }
+}

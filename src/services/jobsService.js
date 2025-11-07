@@ -1,15 +1,13 @@
-const { jobs } = require("../models/db");
+const { jobs, payments } = require("../models/db");
 
 module.exports = {
   list: (req, res) => res.json(jobs),
   create: (req, res) => {
     const { clienteId, descricao, valor, status, data } = req.body;
     if (!clienteId || !descricao || !valor || !data)
-      return res
-        .status(400)
-        .json({
-          error: "Campos obrigatórios: clienteId, descricao, valor, data.",
-        });
+      return res.status(400).json({
+        error: "Campos obrigatórios: clienteId, descricao, valor, data.",
+      });
     const job = {
       id: jobs.length + 1,
       clienteId,
@@ -36,6 +34,15 @@ module.exports = {
     const idx = jobs.findIndex((j) => j.id == req.params.id);
     if (idx === -1)
       return res.status(404).json({ error: "Job não encontrado." });
+    const jobId = Number(req.params.id);
+    const pagamentosVinculados = payments.some((p) => p.jobId === jobId);
+    if (pagamentosVinculados) {
+      return res
+        .status(409)
+        .json({
+          error: "Não é possível remover o job: existem pagamentos vinculados.",
+        });
+    }
     jobs.splice(idx, 1);
     res.status(204).end();
   },
