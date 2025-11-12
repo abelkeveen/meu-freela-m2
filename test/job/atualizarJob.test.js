@@ -1,27 +1,32 @@
 const chai = require("chai");
 const expect = chai.expect;
-const { obterToken, registerUser } = require("../../helpers/autenticacao");
-const { criarCliente, criarJob } = require("../../helpers/cliente");
-const jobFixture = require("../../fixtures/job.json");
-const clienteFixture = require("../../fixtures/cliente.json");
+const { obterToken, registerUser } = require("../helpers/autenticacao");
+const { criarCliente, criarJob } = require("../helpers/cliente");
+const jobFixture = require("../fixtures/job.json");
+const clienteFixture = require("../fixtures/cliente.json");
 const request = require("supertest");
 const app = require("../../server");
-const postLoginFixture = require("../../fixtures/postLogin.json");
-
+const postLoginFixture = require("../fixtures/postLogin.json");
 
 describe("Job", () => {
   let token;
   let clienteId;
   let jobId;
 
-    beforeEach(async () => {
-      // Cria usuário e faz login para obter token
-      await registerUser(postLoginFixture.valido.login, postLoginFixture.valido.senha);
-      token = await obterToken(postLoginFixture.valido.login, postLoginFixture.valido.senha);
-      const clienteRes = await criarCliente(token, clienteFixture.valido);
-      clienteId = clienteRes.body.id;
-      jobId = await criarJob(token, { ...jobFixture, clienteId });
-    });
+  beforeEach(async () => {
+    // Cria usuário e faz login para obter token
+    await registerUser(
+      postLoginFixture.valido.login,
+      postLoginFixture.valido.senha
+    );
+    token = await obterToken(
+      postLoginFixture.valido.login,
+      postLoginFixture.valido.senha
+    );
+    const clienteRes = await criarCliente(token, clienteFixture.valido);
+    clienteId = clienteRes.body.id;
+    jobId = await criarJob(token, { ...jobFixture, clienteId });
+  });
 
   describe("PUT /jobs/{id}", () => {
     it("Deve atualizar o status do job", async () => {

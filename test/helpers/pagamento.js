@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../server");
+const app = require("../../server.js");
 
 const criarPagamento = async (token, pagamento) => {
   return await request(app)

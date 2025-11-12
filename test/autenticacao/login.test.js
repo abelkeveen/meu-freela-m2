@@ -1,7 +1,7 @@
 const chai = require("chai");
 const expect = chai.expect;
-const { registerUser, loginUser } = require("../../helpers/autenticacao");
-const usuarios = require("../../fixtures/postLogin.json");
+const { registerUser, loginUser } = require("../helpers/autenticacao");
+const usuarios = require("../fixtures/postLogin.json");
 
 describe("Post /auth/login", function () {
   beforeEach(async function () {

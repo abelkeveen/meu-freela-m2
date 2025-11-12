@@ -1,15 +1,15 @@
 const chai = require("chai");
 const expect = chai.expect;
-const { registerUser, obterToken } = require("../../helpers/autenticacao");
-const { criarCliente, atualizarCliente } = require("../../helpers/cliente");
-const clientes = require("../../fixtures/cliente.json");
+const { registerUser, obterToken } = require("../helpers/autenticacao");
+const { criarCliente, atualizarCliente } = require("../helpers/cliente");
+const clientes = require("../fixtures/cliente.json");
 
 describe("PUT /clients/{id}", () => {
   let token;
   let clienteId;
 
-  const usuario = require("../../fixtures/postLogin.json").valido;
-  
+  const usuario = require("../fixtures/postLogin.json").valido;
+
   beforeEach(async () => {
     await registerUser(usuario.login, usuario.senha);
     token = await obterToken(usuario.login, usuario.senha);

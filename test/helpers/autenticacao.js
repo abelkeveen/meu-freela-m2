@@ -1,5 +1,6 @@
 const request = require("supertest");
-const app = require("../server");
+const path = require("path");
+const app = require(path.resolve(__dirname, "../../server.js"));
 
 const registerUser = async (login, senha) => {
   return await request(app).post("/auth/register").send({ login, senha });
@@ -15,7 +16,7 @@ const obterToken = async (login, senha) => {
 };
 
 const limparUsuarios = async () => {
-  const db = require("../src/models/db");
+  const db = require("../../src/models/db");
   db.users.length = 0;
 };
 

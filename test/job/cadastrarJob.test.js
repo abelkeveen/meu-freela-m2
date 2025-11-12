@@ -1,29 +1,29 @@
 const chai = require("chai");
 const expect = chai.expect;
-const { obterToken, registerUser } = require("../../helpers/autenticacao");
-const { criarCliente } = require("../../helpers/cliente");
-const jobFixture = require("../../fixtures/job.json");
-const clienteFixture = require("../../fixtures/cliente.json");
-const postLoginFixture = require("../../fixtures/postLogin.json");
+const { obterToken, registerUser } = require("../helpers/autenticacao");
+const { criarCliente } = require("../helpers/cliente");
+const jobFixture = require("../fixtures/job.json");
+const clienteFixture = require("../fixtures/cliente.json");
+const postLoginFixture = require("../fixtures/postLogin.json");
 const request = require("supertest");
 const app = require("../../server");
 
-describe("Job", () =>{
+describe("Job", () => {
   let token;
   let clienteId;
 
-beforeEach(async () => {
-      await registerUser(
-        postLoginFixture.valido.login,
-        postLoginFixture.valido.senha
-      );
-      token = await obterToken(
-        postLoginFixture.valido.login,
-        postLoginFixture.valido.senha
-      );
-      const clienteRes = await criarCliente(token, clienteFixture.valido);
-      clienteId = clienteRes.body.id;
-    });
+  beforeEach(async () => {
+    await registerUser(
+      postLoginFixture.valido.login,
+      postLoginFixture.valido.senha
+    );
+    token = await obterToken(
+      postLoginFixture.valido.login,
+      postLoginFixture.valido.senha
+    );
+    const clienteRes = await criarCliente(token, clienteFixture.valido);
+    clienteId = clienteRes.body.id;
+  });
   describe("POST /jobs", () => {
     it("Deve criar job com sucesso", async () => {
       const res = await request(app)

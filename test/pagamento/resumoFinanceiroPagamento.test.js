@@ -1,14 +1,14 @@
 const chai = require("chai");
 const expect = chai.expect;
-const { obterToken, registerUser } = require("../../helpers/autenticacao");
-const { criarCliente, criarJob } = require("../../helpers/cliente");
-const { criarPagamento } = require("../../helpers/pagamento");
-const jobFixture = require("../../fixtures/job.json");
-const clienteFixture = require("../../fixtures/cliente.json");
-const pagamentoFixture = require("../../fixtures/pagamento.json");
-const postLoginFixture = require("../../fixtures/postLogin.json");
+const { obterToken, registerUser } = require("../helpers/autenticacao");
+const { criarCliente, criarJob } = require("../helpers/cliente");
+const { criarPagamento } = require("../helpers/pagamento");
+const jobFixture = require("../fixtures/job.json");
+const clienteFixture = require("../fixtures/cliente.json");
+const pagamentoFixture = require("../fixtures/pagamento.json");
+const postLoginFixture = require("../fixtures/postLogin.json");
 const request = require("supertest");
-const app = require("../../server");
+const app = require("../../server.js");
 
 describe("GET /payments/summary - Resumo Financeiro", () => {
   let token;
@@ -17,7 +17,7 @@ describe("GET /payments/summary - Resumo Financeiro", () => {
 
   beforeEach(async () => {
     // Limpa pagamentos antes de cada teste
-    const db = require("../../src/models/db");
+    const db = require("../../../src/models/db");
     db.payments.length = 0;
     await registerUser(
       postLoginFixture.valido.login,

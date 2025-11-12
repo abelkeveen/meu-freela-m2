@@ -1,5 +1,6 @@
 const request = require("supertest");
-const app = require("../server");
+const path = require("path");
+const app = require(path.resolve(__dirname, "../../server.js"));
 
 const criarCliente = async (token, cliente) => {
   const req = request(app).post("/clients");
@@ -19,6 +20,6 @@ const criarJob = async (token, jobData) => {
     .set("Authorization", `Bearer ${token}`)
     .send(jobData);
   return res.body.id;
-}
+};
 
 module.exports = { criarCliente, atualizarCliente, criarJob };

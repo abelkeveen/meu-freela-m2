@@ -1,15 +1,15 @@
 const chai = require("chai");
 const expect = chai.expect;
-const { obterToken, registerUser } = require("../../helpers/autenticacao");
-const { criarCliente, criarJob } = require("../../helpers/cliente");
+const { obterToken, registerUser } = require("../helpers/autenticacao");
+const { criarCliente, criarJob } = require("../helpers/cliente");
 const {
   criarPagamento,
   atualizarStatusPagamento,
-} = require("../../helpers/pagamento");
-const jobFixture = require("../../fixtures/job.json");
-const clienteFixture = require("../../fixtures/cliente.json");
-const pagamentoFixture = require("../../fixtures/pagamento.json");
-const postLoginFixture = require("../../fixtures/postLogin.json");
+} = require("../helpers/pagamento");
+const jobFixture = require("../fixtures/job.json");
+const clienteFixture = require("../fixtures/cliente.json");
+const pagamentoFixture = require("../fixtures/pagamento.json");
+const postLoginFixture = require("../fixtures/postLogin.json");
 const request = require("supertest");
 const app = require("../../server");
 
