@@ -13,7 +13,7 @@ describe("Jobs", () => {
   let clienteId;
   let jobId;
 
-  before(async () => {
+  beforeEach(async () => {
     await registerUser(
       postLoginFixture.valido.login,
       postLoginFixture.valido.senha
