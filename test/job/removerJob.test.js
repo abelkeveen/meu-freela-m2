@@ -12,7 +12,7 @@ describe("DELETE /jobs/{id}", () => {
   let token;
   let clienteId;
 
-  before(async () => {
+  beforeEach(async () => {
     await registerUser(
       postLoginFixture.valido.login,
       postLoginFixture.valido.senha

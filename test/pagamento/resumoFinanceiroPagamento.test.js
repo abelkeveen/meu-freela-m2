@@ -17,7 +17,7 @@ describe("GET /payments/summary - Resumo Financeiro", () => {
 
   beforeEach(async () => {
     // Limpa pagamentos antes de cada teste
-    const db = require("../../../src/models/db");
+    const db = require("../../src/models/db");
     db.payments.length = 0;
     await registerUser(
       postLoginFixture.valido.login,
