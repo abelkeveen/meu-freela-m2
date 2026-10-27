@@ -56,13 +56,31 @@ Organizar a rotina de freelancers, permitindo registrar clientes, projetos (jobs
 
 1. Instale as dependências:
    ```bash
-   npm install express body-parser jsonwebtoken bcryptjs swagger-ui-express
+   npm install
    ```
-2. Inicie o servidor:
+2. Inicie a API:
    ```bash
    node server.js
    ```
-3. Acesse a documentação Swagger em [http://localhost:3000/swagger](http://localhost:3000/swagger)
+
+## Testes automatizados
+
+Os testes de API usam Mocha, Chai e Supertest. Antes de cada teste, o banco em memória é zerado (`test/setup.js`), então os testes são independentes entre si.
+
+```bash
+npm test
+```
+
+Cobertura atual: 55 testes, organizados por recurso em `test/`:
+
+| Pasta | O que cobre |
+|---|---|
+| `autenticacao` | registro e login |
+| `cliente` | CRUD, nome único, ID imutável, exclusão com vínculos |
+| `job` | CRUD, cliente obrigatório, exclusão com pagamentos |
+| `pagamento` | cadastro, status, consulta e resumo financeiro |
+
+As regras de negócio que guiam os testes estão em [Regras_de_Negocio.md](Regras_de_Negocio.md).
 
 ## Observações
 
