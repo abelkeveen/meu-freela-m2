@@ -12,11 +12,14 @@ describe("Clientes", () => {
   beforeEach(async () => {
     await registerUser(usuario.login, usuario.senha);
     token = await obterToken(usuario.login, usuario.senha);
-    const clienteRes = await criarCliente(token, clientes.valido);
-    clienteId = clienteRes.body.id;
   });
 
   describe("GET /clients", () => {
+    beforeEach(async () => {
+      const clienteRes = await criarCliente(token, clientes.valido);
+      clienteId = clienteRes.body.id;
+    });
+
     it("Deve retornar 200 e uma lista de clientes", async () => {
       const res = await require("supertest")(require("../../server"))
         .get("/clients")
@@ -45,7 +48,7 @@ describe("Clientes", () => {
     });
   });
   describe("GET /clients/{id}", () => {
-    before(async () => {
+    beforeEach(async () => {
       // Cria usuário e faz login para obter token
       await require("supertest")(require("../../server"))
         .post("/auth/register")
