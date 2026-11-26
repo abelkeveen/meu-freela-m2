@@ -77,7 +77,7 @@ describe("Clientes", () => {
       });
     });
 
-    it("Deve retornar 401 quando o token inválido ou não fornecido", async () => {
+    it("Deve retornar 401 quando o token não fornecido", async () => {
       const res = await require("supertest")(require("../../server")).get(
         `/clients/${clienteId}`
       );
@@ -85,7 +85,7 @@ describe("Clientes", () => {
       expect(res.body.error).to.equal("Token não fornecido.");
     });
 
-    it("Deve retornar 401 quando o token inválido ou não fornecido", async () => {
+    it("Deve retornar 401 quando o token inválido", async () => {
       const res = await require("supertest")(require("../../server"))
         .get(`/clients/${clienteId}`)
         .set("Authorization", "Bearer tokeninvalido");
