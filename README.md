@@ -71,7 +71,11 @@ Os testes de API usam Mocha, Chai e Supertest. Antes de cada teste, o banco em m
 npm test
 ```
 
-Cobertura atual: 55 testes, organizados por recurso em `test/`:
+Para gerar o relatório HTML (mochawesome), rode `npm run test:report`. O relatório fica em `mochawesome-report/mochawesome.html`.
+
+Os testes também rodam no GitHub Actions (`.github/workflows/tests.yml`) a cada pull request e a cada push na `main`. O relatório mochawesome de cada execução fica disponível para download como artefato `mochawesome-report` na página da execução.
+
+Cobertura atual: 67 testes, organizados por recurso em `test/`:
 
 | Pasta | O que cobre |
 |---|---|
