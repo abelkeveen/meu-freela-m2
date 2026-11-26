@@ -1,41 +1,49 @@
-const { payments, jobs } = require("../models/db");
+const { payments, jobs, clients, nextId } = require("../models/db");
+
+const encontrarJob = (jobId) => jobs.find((j) => j.id == jobId);
+
+const encontrarCliente = (job) =>
+  job ? clients.find((c) => c.id == job.clienteId) : undefined;
+
+// Pagamento válido: vinculado a um job existente cujo cliente também existe.
+const pagamentoValido = (p) => Boolean(encontrarCliente(encontrarJob(p.jobId)));
 
 module.exports = {
   list: (req, res) => {
-    const { jobs } = require("../models/db");
-    const { clients } = require("../models/db");
     const pagamentosComCliente = payments.map((p) => {
-      const job = jobs.find((j) => j.id === p.jobId);
-      let clienteNome = null;
-      if (job) {
-        const cliente = clients.find((c) => c.id === job.clienteId);
-        if (cliente) clienteNome = cliente.nome;
-      }
-      return { ...p, clienteNome };
+      const cliente = encontrarCliente(encontrarJob(p.jobId));
+      return { ...p, clienteNome: cliente ? cliente.nome : null };
     });
     res.json(pagamentosComCliente);
   },
   create: (req, res) => {
     const { jobId, valor, recebido, data } = req.body;
-    if (!jobId || !valor)
+    if (!jobId || !valor || recebido === undefined || !data)
       return res
         .status(400)
-        .json({ error: "Campos obrigatórios: jobId, valor." });
+        .json({ error: "Campos obrigatórios: jobId, valor, recebido, data." });
+    if (typeof recebido !== "boolean")
+      return res
+        .status(400)
+        .json({ error: "Campo 'recebido' deve ser booleano." });
+    if (!encontrarJob(jobId))
+      return res.status(404).json({ error: "Job não encontrado." });
     const payment = {
-      id: payments.length + 1,
+      id: nextId("payments"),
       jobId,
       valor,
-      recebido: !!recebido,
-      data: data || new Date().toISOString().slice(0, 10),
+      recebido,
+      data,
     };
     payments.push(payment);
     res.status(201).json(payment);
   },
   summary: (req, res) => {
-    const totalRecebido = payments
+    const validos = payments.filter(pagamentoValido);
+    const totalRecebido = validos
       .filter((p) => p.recebido)
       .reduce((acc, p) => acc + p.valor, 0);
-    const totalPendente = payments
+    const totalPendente = validos
       .filter((p) => !p.recebido)
       .reduce((acc, p) => acc + p.valor, 0);
     res.json({ totalRecebido, totalPendente });

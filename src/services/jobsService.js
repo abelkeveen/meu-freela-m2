@@ -1,4 +1,4 @@
-const { jobs, payments } = require("../models/db");
+const { jobs, payments, clients, nextId } = require("../models/db");
 
 module.exports = {
   list: (req, res) => res.json(jobs),
@@ -8,8 +8,10 @@ module.exports = {
       return res.status(400).json({
         error: "Campos obrigatórios: clienteId, descricao, valor, data.",
       });
+    if (!clients.some((c) => c.id == clienteId))
+      return res.status(404).json({ error: "Cliente não encontrado." });
     const job = {
-      id: jobs.length + 1,
+      id: nextId("jobs"),
       clienteId,
       descricao,
       valor,
@@ -27,7 +29,17 @@ module.exports = {
   update: (req, res) => {
     const job = jobs.find((j) => j.id == req.params.id);
     if (!job) return res.status(404).json({ error: "Job não encontrado." });
-    Object.assign(job, req.body);
+    const { id, ...updates } = req.body;
+    if (id !== undefined && Number(id) !== job.id)
+      return res
+        .status(400)
+        .json({ error: "O identificador do job não pode ser alterado." });
+    if (
+      updates.clienteId !== undefined &&
+      !clients.some((c) => c.id == updates.clienteId)
+    )
+      return res.status(404).json({ error: "Cliente não encontrado." });
+    Object.assign(job, updates);
     res.json(job);
   },
   remove: (req, res) => {

@@ -1,4 +1,10 @@
-const { clients, jobs, payments, users } = require("../src/models/db");
+const {
+  clients,
+  jobs,
+  payments,
+  users,
+  resetIds,
+} = require("../src/models/db");
 
 exports.mochaHooks = {
   beforeEach() {
@@ -6,5 +12,6 @@ exports.mochaHooks = {
     jobs.length = 0;
     payments.length = 0;
     users.length = 0;
+    resetIds();
   },
 };
