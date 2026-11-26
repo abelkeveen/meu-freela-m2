@@ -1,0 +1,66 @@
+name: Performance (k6)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      teste:
+        description: "Teste de performance a rodar"
+        type: choice
+        default: carga
+        options:
+          - smoke
+          - carga
+          - login
+
+jobs:
+  k6:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # PR: os três testes em paralelo (~2 min). Push na main: só o smoke.
+        # Manual (aba Actions): o teste escolhido.
+        teste: ${{ fromJSON(github.event_name == 'pull_request' && '["smoke","carga","login"]' || github.event_name == 'workflow_dispatch' && format('["{0}"]', github.event.inputs.teste) || '["smoke"]') }}
+    env:
+      TESTE: ${{ matrix.teste }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Subir a API (porta 3000)
+        run: |
+          npm ci
+          nohup node server.js > api.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://127.0.0.1:3000/swagger/ && exit 0
+            sleep 1
+          done
+          echo "A API não subiu"; cat api.log; exit 1
+
+      - uses: grafana/setup-k6-action@v1
+
+      # Gera também um relatório HTML com gráficos (dashboard do k6).
+      - name: Rodar k6 (${{ env.TESTE }})
+        env:
+          K6_WEB_DASHBOARD: "true"
+          K6_WEB_DASHBOARD_EXPORT: performance/relatorios/${{ env.TESTE }}.html
+        run: |
+          mkdir -p performance/relatorios
+          k6 run --summary-export performance/relatorios/${{ env.TESTE }}-resumo.json performance/${{ env.TESTE }}.js
+
+      - name: Publicar relatório k6
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-${{ env.TESTE }}
+          path: |
+            performance/relatorios/
+            api.log
+          retention-days: 30

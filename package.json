@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "test:report": "mocha --reporter mochawesome"
+    "test:report": "mocha --reporter mochawesome",
+    "perf:smoke": "k6 run performance/smoke.js",
+    "perf:carga": "k6 run performance/carga.js",
+    "perf:login": "k6 run performance/login.js"
   },
   "repository": {
     "type": "git",
