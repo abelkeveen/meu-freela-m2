@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { users } = require("../models/db");
+const { users, nextId } = require("../models/db");
 const SECRET = "supersecret";
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
     if (users.find((u) => u.login === login))
       return res.status(409).json({ error: "Usuário já existe." });
     const hash = bcrypt.hashSync(senha, 8);
-    users.push({ id: users.length + 1, login, senha: hash });
+    users.push({ id: nextId("users"), login, senha: hash });
     res.status(201).json({ login });
   },
   login: (req, res) => {

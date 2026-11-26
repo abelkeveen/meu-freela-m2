@@ -287,7 +287,8 @@
             }
           },
           "400": { "description": "Campos obrigatórios." },
-          "401": { "description": "Token inválido ou não fornecido." }
+          "401": { "description": "Token inválido ou não fornecido." },
+          "404": { "description": "Cliente não encontrado." }
         }
       }
     },
@@ -403,8 +404,9 @@
               }
             }
           },
-          "400": { "description": "Campos obrigatórios." },
-          "401": { "description": "Token inválido ou não fornecido." }
+          "400": { "description": "Campos obrigatórios: jobId, valor, recebido, data." },
+          "401": { "description": "Token inválido ou não fornecido." },
+          "404": { "description": "Job não encontrado." }
         }
       }
     },
@@ -502,7 +504,10 @@
           "id": { "type": "integer" },
           "jobId": { "type": "integer" },
           "valor": { "type": "number" },
-          "recebido": { "type": "boolean" },
+          "recebido": {
+            "type": "boolean",
+            "description": "Status do pagamento: true = recebido, false = pendente"
+          },
           "data": { "type": "string", "format": "date-time" },
           "clienteNome": {
             "type": "string",

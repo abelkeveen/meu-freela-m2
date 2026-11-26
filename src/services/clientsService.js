@@ -1,4 +1,4 @@
-const { clients } = require("../models/db");
+const { clients, nextId } = require("../models/db");
 
 module.exports = {
   list: (req, res) => res.json(clients),
@@ -11,7 +11,7 @@ module.exports = {
         .status(409)
         .json({ error: "Nome de cliente já existente." });
     }
-    const client = { id: clients.length + 1, nome, contato };
+    const client = { id: nextId("clients"), nome, contato };
     clients.push(client);
     res.status(201).json(client);
   },
